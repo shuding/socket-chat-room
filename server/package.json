@@ -1,0 +1,14 @@
+{
+  "name": "socketchat-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node -harmony -use_strict index.js"
+  },
+  "author": "Shu Ding <ds303077135@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "lowdb": "^0.10.2"
+  }
+}
