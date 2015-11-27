@@ -10,7 +10,7 @@ const Socket   = require('./socket');
 const Protocol = require('./protocol');
 const config   = require('./config');
 
-var message    = new Protocol();
+var message    = new Protocol(config.MAX_SOCKET_LEN);
 var db         = low(config.DB, {async: false});
 var mainPool   = new Pool(db('sid').get('0'));
 var mainSocket = new Socket(config.HOST, config.PORT);

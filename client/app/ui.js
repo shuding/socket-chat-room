@@ -8,6 +8,26 @@ var app = angular.module('sc', ['ngAnimate']);
 app.controller('main', ['$scope', '$sce', mainCtrl]);
 
 function mainCtrl($scope, $sce) {
+    var fileSelector           = document.createElement('input');
+    fileSelector.style.display = 'none';
+    fileSelector.setAttribute('type', 'file');
+    fileSelector.addEventListener('change', function (event) {
+        var files = event.target.files;
+        for (var i = 0; i < files.length; ++i) {
+            var file   = files[i];
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $scope.input = e.target.result;
+                $scope.submit();
+            };
+
+            reader.readAsDataURL(file);
+        }
+    });
+
+    document.body.appendChild(fileSelector);
+
     $scope.state    = false;
     $scope.input    = '';
     $scope.msgList  = [];
@@ -37,11 +57,18 @@ function mainCtrl($scope, $sce) {
                 $scope.$apply();
                 break;
             case 'msg':
-                $scope.msgList.push(data.content.data);
-                $scope.$apply();
-                console.log(data);
+                $scope.handleMsg(data.content.data);
         }
     });
+
+    $scope.handleMsg = function (data) {
+        if (data.data.startsWith('data:image/')) {
+            // Image
+            data.data = '<img src="' + data.data + '">';
+        }
+        $scope.msgList.push(data);
+        $scope.$apply();
+    };
 
     $scope.display = function (data) {
         var name = data.name;
@@ -99,6 +126,10 @@ function mainCtrl($scope, $sce) {
 
     $scope.addEmoji = function (em) {
         $scope.input += em;
+    };
+
+    $scope.addImage = function () {
+        fileSelector.click();
     };
 
     // Connect to server

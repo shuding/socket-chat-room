@@ -9,32 +9,72 @@
  */
 
 module.exports = class {
-    constructor() {
-        this.hooks = {};
+    constructor(max_socket_len = 800) {
+        this.hooks          = {};
+        this.stack          = '';
+        this.max_socket_len = max_socket_len;
+    }
+
+    encode(str) {
+        return new Buffer(str).toString('binary');
+    }
+
+    decode(str) {
+        return new Buffer(str, 'binary').toString('utf8');
     }
 
     on(event, fn) {
         this.hooks[event] = fn;
     }
 
-    listener(raw) {
-        var data = JSON.parse(raw);
-        switch (data.type) {
-            case 'res':
-                this.hooks.res && this.hooks.res(data);
-                break;
-            case 'push':
-                this.hooks.push && this.hooks.push(data);
-                break;
+    pipe(no, total, raw) {
+        this.stack += raw;
+        if (no == total) {
+            var data = JSON.parse(this.stack);
+
+            this.stack = '';
+            switch (data.type) {
+                case 'res':
+                    this.hooks.res && this.hooks.res(data);
+                    break;
+                case 'push':
+                    this.hooks.push && this.hooks.push(data);
+                    break;
+            }
         }
     }
 
-    send(data) {
+    listener(raw) {
+        var str = this.decode(raw);
+        str.replace(/\.(\d+)\/(\d+)\.([^\.]+)/g, (str, ...data) => {
+            this.pipe(+data[0], +data[1], data[2]);
+            return '';
+        });
+    }
+
+    sendLargeRawMsg(socket, str) {
+        var len      = str.length;
+        var cnt      = Math.ceil(len / this.max_socket_len);
+        var tmp, num = 0;
+        console.log(cnt);
+        while (str.length) {
+            num++;
+            tmp = '.' + num + '/' + cnt + '.' + str.substr(0, this.max_socket_len);
+            str = str.substr(this.max_socket_len);
+            socket.send(this.encode(tmp));
+        }
+    }
+
+    send(socket, data) {
+        var str = '';
         switch (data.type) {
             case 'msg':
-                return JSON.stringify(data);
+                str = JSON.stringify(data);
+                break;
             case 'login':
-                return JSON.stringify(data);
+                str = JSON.stringify(data);
+                break;
         }
+        this.sendLargeRawMsg(socket, str);
     }
 };

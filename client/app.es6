@@ -3,15 +3,15 @@
  * <ds303077135@gmail.com>
  */
 
-const Socket   = require('./socket');
+const Socket = require('./socket');
 const Protocol = require('./protocol');
-const config   = require('./config');
+const config = require('./config');
 
 class Client {
     constructor() {
         this.hooks = {};
 
-        let message    = new Protocol();
+        let message    = new Protocol(config.MAX_SOCKET_LEN);
         let mainSocket = new Socket(config.HOST, config.PORT);
 
         mainSocket.onconnect(() => {
@@ -40,7 +40,7 @@ class Client {
     }
 
     send(data) {
-        this.mainSocket.send(this.message.send(data));
+        this.message.send(this.mainSocket, data);
     }
 
     start() {
