@@ -115,6 +115,15 @@ body {
   text-align: center;
   background-color: rgba(0, 0, 0, 0.7);
 }
+#image {
+  display: inline-block;
+  margin: 0 5px;
+  height: 1.5em;
+  overflow: hidden;
+}
+#image a {
+  text-decoration: none;
+}
 #emoji {
   display: inline-block;
   max-width: 1.5em;

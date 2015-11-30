@@ -46,7 +46,7 @@
             <span ng-repeat="em in data.emoji" ng-click="addEmoji(em)">{{ em }}</span>
           </div>
         </div>
-        <span><a ng-click="addImage()" href="javascript:;">Send Image</a></span>
+        <div id="image"><a ng-click="addImage()" href="javascript:;">🌃</a></div>
         <label><textarea id="inputbox" ng-model="input" ng-keydown="keydown($event)" placeholder="回车键发送" autofocus></textarea></label>
       </form>
     </div>

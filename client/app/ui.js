@@ -15,6 +15,13 @@ function mainCtrl($scope, $sce) {
         var files = event.target.files;
         for (var i = 0; i < files.length; ++i) {
             var file   = files[i];
+
+            // 2MB
+            if (file.size > 2097152) {
+                alert('File size exceeded 2MB!');
+                return;
+            }
+
             var reader = new FileReader();
 
             reader.onload = function (e) {
