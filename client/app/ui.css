@@ -15,6 +15,11 @@ body {
   text-align: center;
   background-color: #FFF;
 }
+#login > small {
+  color: #C1C1C1;
+  float: right;
+  padding: 2px 6px;
+}
 #login > h2 {
   padding-top: 5em;
 }

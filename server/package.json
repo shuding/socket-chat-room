@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node -harmony -use_strict index.js"
+    "start": "node -harmony -use_strict index.js",
+    "build": "babel *.js -d ../build-server && cp *.json ../build-server && enclose -x ../build-server/index.js && mv ../build-server/index ../SocketChatRoomServer && rm -rf ../build-server"
   },
   "author": "Shu Ding <ds303077135@gmail.com>",
   "license": "MIT",

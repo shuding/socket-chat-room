@@ -6,12 +6,11 @@
 'use babel';
 
 const electron = require('electron');
-var Client   = require('./app');
+var Client     = require('./app');
 
 var ipc           = electron.ipcMain;
 var app           = electron.app;
 var BrowserWindow = electron.BrowserWindow;
-var mainWindow    = null;
 
 app.on('window-all-closed', function () {
     app.quit();

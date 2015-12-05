@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "babel *.es6 -d .",
-    "start": "electron ."
+    "start": "electron .",
+    "pack": "electron-packager . SocketChatRoom --out=.. --platform=darwin --arch=x64 --version=0.35.1 --overwrite"
   },
   "author": "Shu Ding <ds303077135@gmail.com>",
   "license": "MIT",
