@@ -39,8 +39,6 @@ JSON data -> stringify -> split to segments -> add No./total header -> binarize 
 ## Details (draft)
 
 ```
-[lowdb]
-  <-- Node.js -->
 [server]
   <-- Wrapped TCP Socket -->
 [client]

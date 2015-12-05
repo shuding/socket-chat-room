@@ -47,16 +47,16 @@ module.exports = class {
     listener(raw) {
         var str = this.decode(raw);
         str.replace(/\.(\d+)\/(\d+)\.([^\.]+)/g, (str, ...data) => {
-            this.pipe(+data[0], +data[1], data[2]);
+            this.pipe(+data[0], +data[1], data[2].replace(/\(dot\)/g, '.'));
             return '';
         });
     }
 
     sendLargeRawMsg(socket, str) {
+        str          = str.replace(/\./g, '(dot)');
         var len      = str.length;
         var cnt      = Math.ceil(len / this.max_socket_len);
         var tmp, num = 0;
-        console.log(cnt);
         while (str.length) {
             num++;
             tmp = '.' + num + '/' + cnt + '.' + str.substr(0, this.max_socket_len);

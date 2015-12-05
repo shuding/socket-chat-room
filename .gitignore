@@ -6,3 +6,4 @@ client/socket.js
 
 npm-debug.log
 db.json
+.DS_Store

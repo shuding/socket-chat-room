@@ -3,24 +3,22 @@
  * <ds303077135@gmail.com>
  */
 
-const low = require('lowdb');
-
 const Pool     = require('./pool');
 const Socket   = require('./socket');
 const Protocol = require('./protocol');
 const config   = require('./config');
 
 var message    = new Protocol(config.MAX_SOCKET_LEN);
-var db         = low(config.DB, {async: false});
-var mainPool   = new Pool(db('sid').get('0'));
+var mainPool   = new Pool();
 var mainSocket = new Socket(config.HOST, config.PORT);
 
+var users = [];
+
 function syncUser() {
-    var data = db('users');
     mainPool.each((client) => {
         message.push(client, {
             type: 'syncuser',
-            data: data
+            data: users
         });
     });
 }
@@ -28,18 +26,26 @@ function syncUser() {
 function onConnect() {
     console.log('- Socket connect');
     mainPool.add(this);
-    db('sid').set('0', mainPool.__index);
 }
 
 function onDisconnect() {
     console.log('- Socket disconnect');
-    db('users').chain().find({sid: this.id}).assign({'state': 0}).value();
+    var user = users.filter(user => { return user.sid == this.id })[0];
+    if (user) {
+        user.state = 0;
+    }
     mainPool.remove(this);
     syncUser();
 }
 
 function onError() {
     console.log('- Socket error');
+    var user = users.filter(user => { return user.sid == this.id })[0];
+    if (user) {
+        user.state = 0;
+    }
+    mainPool.remove(this);
+    syncUser();
 }
 
 function onData(data) {
@@ -48,22 +54,19 @@ function onData(data) {
 }
 
 message.on('login', function (req, res, sid) {
-    var user = db('users').find({name: req.content.name});
+    var user = users.filter(u => { return u.name == req.content.name })[0];
     if (user && user.state) {
         // Still online, res with an err
         return res({
             error:   1,
-            message: 'still online'
+            message: 'ERROR: This user has already logged in.'
         });
     } else if (user) {
         // Login
-        db('users').chain().find({name: req.content.name}).assign({
-            state: 1,
-            sid:   sid
-        }).value();
+        user.state = 1;
     } else {
         // New user
-        db('users').push({
+        users.push({
             name:  req.content.name,
             state: 1,
             sid:   sid
@@ -74,9 +77,8 @@ message.on('login', function (req, res, sid) {
 });
 
 message.on('msg', function (req, res) {
-    db('msg').push(req.content);
     res();
-    mainPool.each((client) => {
+    mainPool.each(client => {
         message.push(client, {
             type: 'msg',
             data: req.content

@@ -2,6 +2,5 @@
   "HOST": "127.0.0.1",
   "PORT": 2015,
   "ENCODING": "utf8",
-  "DB": "db.json",
   "MAX_SOCKET_LEN": 800
 }

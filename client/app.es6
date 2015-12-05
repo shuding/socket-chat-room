@@ -43,6 +43,11 @@ class Client {
         this.message.send(this.mainSocket, data);
     }
 
+    setting(host, port) {
+        this.mainSocket.host = host;
+        this.mainSocket.port = port;
+    }
+
     start() {
         this.mainSocket.connect();
     }

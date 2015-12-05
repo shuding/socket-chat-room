@@ -34,8 +34,8 @@ app.on('ready', function () {
     client.on('connect', function () {
         mainWindow.webContents.send('connect');
     });
-    client.on('end', function () {
-        mainWindow.webContents.send('end');
+    client.on('disconnect', function () {
+        mainWindow.webContents.send('disconnect');
     });
     client.on('error', function () {
         mainWindow.webContents.send('error');
@@ -51,42 +51,9 @@ app.on('ready', function () {
         // Apis
         if (data === 'connect') {
             return client.start();
+        } else if (data.name === 'setting') {
+            return client.setting(data.host, data.port);
         }
         client.send(data);
     });
-
-    /*
-     client.ondata(function (raw) {
-     var data = protocol.decode(raw);
-     if (data) {
-     switch (data.type) {
-     case 'msg':
-     return mainWindow.webContents.send('msg', data.content);
-     case 'syncusers':
-     return mainWindow.webContents.send('syncusers', data.content);
-     }
-     }
-     });
-     client.onerror(function () {
-     mainWindow.webContents.send('error');
-     setTimeout(function () {
-     mainWindow.webContents.send('connect');
-     client.connect();
-     }, 1000);
-     });
-     client.onend(function () {
-     mainWindow.webContents.send('end');
-     setTimeout(function () {
-     mainWindow.webContents.send('connect');
-     client.connect();
-     }, 1000);
-     });
-     */
-
-    /*
-     ipc.on('synchronous-message', function (event, data) {
-     client.send(protocol.encode(data));
-     });
-     */
-    //mainWindow
 });

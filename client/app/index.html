@@ -12,14 +12,16 @@
 </head>
 <body ng-controller="main">
 <div id="error" ng-if="!state">
-  <p>连接断开，尝试重新连接中……</p>
+  <p>连接中……</p>
 </div>
 <div id="login" ng-if="!isLogin">
   <h2>登陆</h2>
   <form ng-submit="login()">
     <label>
-      请输入你的昵称：
-      <input type="text" ng-model="data.username">
+      <input type="text" ng-model="data.username" placeholder="你的昵称" autofocus>
+      <br>
+      <input type="text" ng-model="data.addr" placeholder="127.0.0.1:2015">
+      <br>
       <input type="submit" value="login">
     </label>
   </form>

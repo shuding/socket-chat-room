@@ -35,27 +35,48 @@ function mainCtrl($scope, $sce) {
 
     document.body.appendChild(fileSelector);
 
-    $scope.state    = false;
+    $scope.state    = true;
     $scope.input    = '';
     $scope.msgList  = [];
     $scope.userList = {};
     $scope.isLogin  = false;
     $scope.data     = {
         username: '',
+        addr:     '',
         emoji:    ['😂', '😀', '😆', '😘', '😶', '😥', '😪', '😝', '😓', '😷']
     };
 
     ipc.on('connect', function () {
         $scope.state = true;
+
+        $({
+            type:    'login',
+            content: {
+                name: $scope.data.username
+            }
+        }, function (err) {
+            if (err) {
+                return alert(err);
+            }
+            $scope.isLogin = true;
+            $scope.$apply();
+        });
+
         $scope.$apply();
     });
     ipc.on('error', function () {
         $scope.state = false;
         $scope.$apply();
+        setTimeout(function () {
+            $scope.connect();
+        }, 800);
     });
-    ipc.on('end', function () {
+    ipc.on('disconnect', function () {
         $scope.state = false;
         $scope.$apply();
+        setTimeout(function () {
+            $scope.connect();
+        }, 800);
     });
     ipc.on('push', function (data) {
         switch (data.content.type) {
@@ -93,18 +114,10 @@ function mainCtrl($scope, $sce) {
         if (!$scope.data.username) {
             return;
         }
-        $({
-            type:    'login',
-            content: {
-                name: $scope.data.username
-            }
-        }, function (err) {
-            if (err) {
-                return alert(err);
-            }
-            $scope.isLogin = true;
-            $scope.$apply();
-        });
+        var addr = $scope.data.addr || '127.0.0.1:2015';
+
+        $scope.setting(addr.split(':')[0], parseInt(addr.split(':')[1]));
+        $scope.connect();
     };
 
     $scope.submit = function () {
@@ -139,10 +152,17 @@ function mainCtrl($scope, $sce) {
         fileSelector.click();
     };
 
+    // Set port and host
+    $scope.setting = function (host, port) {
+        ipc.send('synchronous-message', {
+            name: 'setting',
+            host: host,
+            port: port
+        });
+    };
+
     // Connect to server
     $scope.connect = function () {
         ipc.send('synchronous-message', 'connect');
     };
-
-    $scope.connect();
 }
