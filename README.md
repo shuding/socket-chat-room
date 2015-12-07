@@ -1,6 +1,6 @@
 # socket chat room
 
-[Binary & releases](releases).
+[Binary & releases](https://github.com/quietshu/socket-chat-room/releases).
 
 ![demo](./app-demo.png)
 
