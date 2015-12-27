@@ -43,7 +43,7 @@ function mainCtrl($scope, $sce) {
     $scope.data     = {
         username: '',
         addr:     '',
-        emoji:    ['😂', '😀', '😆', '😘', '😶', '😥', '😪', '😝', '😓', '😷']
+        emoji:    ['1f602', '1f603', '1f60e', '1f61c', '1f62a', '1f62d', '1f618', '1f624', '1f612', '1f613']
     };
 
     ipc.on('connect', function () {
@@ -94,6 +94,9 @@ function mainCtrl($scope, $sce) {
             // Image
             data.data = '<img src="' + data.data + '">';
         }
+        data.data = data.data.replace(/:(.....):/g, function (a, b) {
+        	return ' <img class="emoji-icon" src="' + b + '.png">';
+        });
         $scope.msgList.push(data);
         $scope.$apply();
     };
@@ -145,7 +148,7 @@ function mainCtrl($scope, $sce) {
     };
 
     $scope.addEmoji = function (em) {
-        $scope.input += em;
+        $scope.input += ' :' + em + ':';
     };
 
     $scope.addImage = function () {

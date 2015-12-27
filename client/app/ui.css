@@ -169,6 +169,10 @@ body {
 #image a {
   text-decoration: none;
 }
+img.emoji-icon {
+  padding: 0;
+  width: 22px;
+}
 #emoji {
   display: inline-block;
   max-width: 1.5em;

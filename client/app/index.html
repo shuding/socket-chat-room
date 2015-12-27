@@ -46,10 +46,10 @@
       <form ng-submit="submit()">
         <div id="emoji">
           <div>
-            <span ng-repeat="em in data.emoji" ng-click="addEmoji(em)">{{ em }}</span>
+            <span ng-repeat="em in data.emoji" ng-click="addEmoji(em)"><img class="emoji-icon" src="{{ em }}.png"></span>
           </div>
         </div>
-        <div id="image"><a ng-click="addImage()" href="javascript:;">🌃</a></div>
+        <div id="image"><a ng-click="addImage()" href="javascript:;"><img class="emoji-icon" src="1f303.png"></a></div>
         <label><textarea id="inputbox" ng-model="input" ng-keydown="keydown($event)" placeholder="回车键发送" autofocus></textarea></label>
       </form>
     </div>

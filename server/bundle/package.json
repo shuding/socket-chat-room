@@ -1,0 +1,13 @@
+{
+  "name": "socketchat-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gui.js",
+  "scripts": {
+    "build": "babel *.es6.js -d .",
+    "start": "electron .",
+    "pack": "electron-packager . SocketChatRoomServer --out=../.. --platform=darwin --arch=x64 --version=0.35.1 --overwrite"
+  },
+  "author": "Shu Ding <ds303077135@gmail.com>",
+  "license": "MIT"
+}

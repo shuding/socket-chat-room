@@ -9,5 +9,7 @@ db.json
 .DS_Store
 
 SocketChatRoom-darwin-x64
+SocketChatRoom-win32-x64
 
-SocketChatRoomServer
+SocketChatRoomServer-darwin-x64
+SocketChatRoomServer-win32-x64
