@@ -23,7 +23,7 @@
 1. Request: `client - request -> server - response -> client`
 2. Push: `server - push -> client`
 
-### Data
+### Data on Socket/TCP
 
 ```javascript
 {
@@ -52,17 +52,17 @@ Content field of messages.
 JSON data -> stringify -> split to segments -> add No./total header -> binarize -> send
 ```
 
-### Demo (push)
+### Demo
 
-#### Server
+#### A request from the server (push) or client (request-response)
 
-Stringify:
+Stringify the message context:
 
 ```
 {"type":"push","timestamp":1449345271889,"content":{"type":"msg","data":{"data":"It works.","name":"ds","time":1449345271886}}}
 ```
 
-Split:
+Split into segments:
 
 ```
 {"type":"push","timestamp":1449
@@ -72,7 +72,7 @@ name":"ds","time":1449345271886
 }}}
 ```
 
-Pre-encode dots:
+Pre-encode "dots":
 
 ```
 {"type":"push","timestamp":1449
@@ -82,7 +82,7 @@ name":"ds","time":1449345271886
 }}}
 ```
 
-Add header:
+Add header info:
 
 ```
 .1/5.{"type":"push","timestamp":1449
@@ -92,20 +92,22 @@ Add header:
 .5/5.}}}
 ```
 
-Binarize, TCP transmit
+Binarize and TCP transmit.
 
 #### Client
 
-Receive segment, convert to UTF-8
+Receive all segments and decode with UTF-8.
 
 Parse header and push segments into a stack:
 
 ```
+...
 5/5 }}}
 4/5 name":"ds","time":1449345271886
 3/5 g","data":{"data":"It works(dot)","
 2/5 345271889,"content":{"type":"ms
 1/5 {"type":"push","timestamp":1449
+...
 ```
 
 Pop out the whole message and concat segments, decode dots:
@@ -114,13 +116,19 @@ Pop out the whole message and concat segments, decode dots:
 {"type":"push","timestamp":1449345271889,"content":{"type":"msg","data":{"data":"It works.","name":"ds","time":1449345271886}}}
 ```
 
-#### Error handling
+#### Image
 
-(todo)
+In client we encode the image data with base64, and wrapped as the context of a message.
 
-### Demo (request-response)
+```
+...{"data":"data:image/png;base64,iVB..."}...
+```
 
-Take a random [token](#token) with each transmit.
+For the receiver, just parse the base64 string and decode it.
+
+#### Emoji
+
+Send as text like `:xxxxx:`.
 
 ## Build
 
