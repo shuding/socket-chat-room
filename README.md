@@ -137,7 +137,7 @@ Send as text like `:xxxxx:`.
 Babel & Electron & Enclose
 
 1. `$ npm i babel -g`
-2. `$ npm i electron -g`
+2. `$ npm i electron-prebuilt -g`
 3. `$ npm i enclose -g`
 
 ### Build Client

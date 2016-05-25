@@ -5,7 +5,7 @@
 
 (function (window) {
 
-    var ipc = require('ipc');
+    var ipc = require('electron').ipcRenderer;
 
     /**
      * Keeps a request-response queue, like HTTP
@@ -16,7 +16,7 @@
      *  Using random token to specific the request session.
      */
     var requestQueue = {};
-    ipc.on('res', function (data) {
+    ipc.on('res', function (event, data) {
         if (requestQueue[data.token]) {
             if (data.content && data.content.error) {
                 requestQueue[data.token](data.content.message, data);
